@@ -36,7 +36,7 @@
     h2_leadership: { en: 'Extracurricular &amp; Leadership', vi: 'Hoạt Động Ngoại Khóa &amp; Lãnh Đạo' },
     eyebrow_contact: { en: 'Get in touch', vi: 'Liên Hệ' },
     chip_gpa_label: { en: 'Grade 12 GPA', vi: 'GPA Lớp 12' },
-    chip_ielts_label: { en: 'Overall', vi: 'Tổng điểm' },
+    chip_ai_label: { en: 'AI Research', vi: 'Nghiên cứu AI' },
     chip_citizenship_label: { en: 'Citizenship', vi: 'Quốc tịch' },
     chip_citizenship_val: { en: 'Vietnam', vi: 'Việt Nam' }
   };
