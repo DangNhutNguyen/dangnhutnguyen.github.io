@@ -2,10 +2,105 @@
 
 *Logbook 05 · 2024*
 
-A neural network used to be a rather polite box for me. I put data in, called a few framework functions, selected an optimizer, and waited for the accuracy to rise. If it went up, I was pleased. If it remained still, I changed the learning rate or looked for another notebook. It was enough to begin, but it left one slightly uncomfortable question: **What was actually happening inside the box?** In 2024, I built a neural network from scratch and trained it on MNIST. I was not trying to create a digit classifier better than methods that had existed for years. I wanted to write enough of the process myself that I could no longer hide behind one library call. Remove the decoration, and a basic layer receives an input, multiplies it by weights, adds a bias, and passes the result through an activation function. The difficult part is not reading the equation. It is turning that equation into code where every matrix has the right shape, data moves in the right direction, and the values do not explode after a few iterations. I had to notice the things a framework usually handles in silence: what shape does each tensor have? on which axis is the batch placed? how is the bias broadcast? which values must the activation save for the backward pass? is the loss calculated per sample or averaged across the batch?
+A neural network used to be a rather polite box for me. I put data in, called a few framework functions, selected an optimizer, and waited for the accuracy to rise. If it went up, I was pleased. If it remained still, I changed the learning rate or looked for another notebook. It was enough to begin, but it left one slightly uncomfortable question: **What was actually happening inside the box?**
 
-This was when I learned that many machine-learning errors are really accounting errors. I have lost track of where a quantity lives, how many times it has been added, or whether it has already been averaged. The forward pass tells a story from data to prediction. Backpropagation asks me to tell that story backward: how does an error at the output relate to every parameter that came before it? On paper, the chain rule looks compact. In code, it becomes a chain of responsibility. Each layer must know the gradient arriving from behind, compute its local derivative, and send a gradient farther back. One wrong transpose or summation dimension may crash the program immediately. Worse is when it does not crash: the model continues running, the loss remains a number, and almost no learning takes place. Sometimes the accuracy refused to move. Sometimes the loss changed in a suspicious direction. Sometimes fixing one shape made another shape object. These errors were not enjoyable while I was facing them, but they stopped the symbols in the textbook from remaining only symbols. The gradient was no longer an arrow decorating a diagram. It was data moving through a system I had written. MNIST is so familiar that it has become the “Hello, World!” of computer vision. That made it right for this project. I did not need a new problem. I needed a stable one where most failures would come from my own understanding and implementation.
+In 2024, I built a neural network from scratch and trained it on MNIST. I was not trying to create a digit classifier better than methods that had existed for years. I wanted to write enough of the process myself that I could no longer hide behind one library call.
 
-When the model finally began to learn, it did not feel like reaching a benchmark. It felt like a small machine had finally agreed to follow the chain of reasoning I had written. Returning to PyTorch afterward became more comfortable. Zeroing gradients, batch dimensions, parameter updates, and numerical stability no longer felt like conventions I had to memorize. I understood more clearly what the framework was carrying for me and why it needed to do so. Writing from scratch did not make frameworks less important. It made me grateful for them in the right places. A from-scratch project can create the feeling that “I understand now” simply because I have written a large amount of code. Long code is not evidence of understanding. If I began again, I would test more systematically. I would compare gradients from backpropagation with finite-difference approximations on a tiny network. It is slow, but it gives a strong signal about whether the backward pass is correct. Before training on all of MNIST, I would force the network to memorize a few examples. If it cannot solve that tiny problem, adding epochs is not the answer. Every transformation should have a small input whose result can be calculated by hand. Waiting until the entire network is assembled before debugging is an efficient way to have no idea where the error is.
+![Multi-layer neural network architecture and backpropagation gradient flow](assets/writings/neural-network-from-scratch.jpg)
 
-I would not look only at the loss. I would inspect whether activations and gradients were too large, too small, or collapsing to one side. Shapes, normalization, the loss function, and averaging conventions should live beside the implementation rather than remaining invisible knowledge. Building a neural network from scratch did not make me an expert. It only removed a few illusions. I no longer believe that knowing how to use an API means understanding the model. I also no longer believe that writing everything myself is the only form of “real learning.” Neither extreme is necessary. What matters is knowing what the abstraction hides and when I need to open it. The project also led toward the area I care about now: optimizing model architecture and training, especially when resources are limited. If I want a model to be smaller, faster, or less memory-hungry, I first need to know where the cost appears. I once saw a neural network as a box that recognized digits. Now I see a chain of calculations, assumptions, and design decisions-all of which can be questioned. And I think that is where learning really begins.
+## 1. The Mathematical Engine Behind the Abstraction
+
+Remove the decoration, and a basic layer receives an input $X$, multiplies it by weights $W$, adds a bias $b$, and passes the result through an activation function $\sigma$:
+
+$$Z = X \cdot W + b$$
+$$A = \sigma(Z)$$
+
+The difficult part is not reading the equation on paper. It is turning that equation into code where every matrix has the right shape, data moves in the right direction, and numerical values do not explode or vanish after a few iterations.
+
+I had to explicitly manage the mechanics frameworks usually handle in silence:
+- What exact **shape** does each tensor maintain?
+- On which axis is the batch dimension positioned $(N, D_{in})$?
+- How is the bias vector broadcast across mini-batch matrices?
+- Which intermediate activations must be cached during the forward pass for backpropagation?
+- Is the loss computed per sample or averaged across the batch?
+
+> [!NOTE]
+> Many machine-learning bugs are fundamentally **accounting errors**. You lose track of where a quantity lives, how many times it was accumulated, or whether it was averaged over the correct tensor axis.
+
+## 2. Implementing a Dense Layer from Scratch (NumPy)
+
+Here is how I implemented a fully connected Linear Layer in pure Python, detailing both Forward Propagation and Backpropagation:
+
+```python
+import numpy as np
+
+class DenseLayer:
+    """
+    Linear transform Z = X.W + b with analytical gradient backpropagation.
+    """
+    def __init__(self, in_features: int, out_features: int):
+        # He / Kaiming normal initialization to maintain activation variance
+        limit = np.sqrt(2.0 / in_features)
+        self.weights = np.random.randn(in_features, out_features) * limit
+        self.biases = np.zeros((1, out_features))
+        
+        # Cache buffers for the backward pass
+        self.inputs_cache = None
+        self.grad_weights = None
+        self.grad_biases = None
+
+    def forward(self, x: np.ndarray) -> np.ndarray:
+        """
+        x shape: (batch_size, in_features)
+        output shape: (batch_size, out_features)
+        """
+        self.inputs_cache = x
+        return np.dot(x, self.weights) + self.biases
+
+    def backward(self, grad_output: np.ndarray) -> np.ndarray:
+        """
+        grad_output: dL/dZ flowing backwards from the next layer
+        Returns: dL/dX to be propagated to the preceding layer
+        """
+        batch_size = self.inputs_cache.shape[0]
+        
+        # Gradient w.r.t weights: dL/dW = X.T @ (dL/dZ)
+        self.grad_weights = np.dot(self.inputs_cache.T, grad_output)
+        
+        # Gradient w.r.t biases: dL/db = sum(dL/dZ) across batch axis
+        self.grad_biases = np.sum(grad_output, axis=0, keepdims=True)
+        
+        # Gradient w.r.t inputs: dL/dX = (dL/dZ) @ W.T
+        grad_input = np.dot(grad_output, self.weights.T)
+        return grad_input
+```
+
+The forward pass tells a story from raw features to class probabilities. Backpropagation asks me to tell that story backward: how does an error at the output loss relate to every individual parameter that preceded it?
+
+On paper, the chain rule looks compact. In code, it becomes an explicit **chain of responsibility**. Each layer must receive the gradient arriving from ahead, compute its local Jacobian derivative, and project gradients backward.
+
+One mismatched transpose (`.T`) or incorrect summation axis can break execution. Worse is when it runs silently: the model computes numbers, the loss floats, but no actual gradient descent happens.
+
+> [!TIP]
+> **Gradient Checking Discipline:** When writing backpropagation from scratch, always compare analytical gradients with finite-difference approximations on a toy network:
+> 
+> $$\frac{\partial L}{\partial \theta} \approx \frac{L(\theta + \epsilon) - L(\theta - \epsilon)}{2\epsilon}$$
+> 
+> If the relative error exceeds $10^{-6}$, your analytical backward formulation has a mathematical flaw.
+
+## 3. When the Machine Finally Learns
+
+There were nights when accuracy lingered at 10%. Times when gradients exploded into `NaN`. Times when fixing one tensor dimension broke three others. These errors were frustrating, but they stopped formulas from remaining dry symbols. Gradients were no longer arrows in slides—they were numeric vectors flowing through lines of code I wrote.
+
+MNIST is so standard it has become the "Hello World" of vision. But that made it ideal: I did not need an exotic problem; I needed a rock-solid baseline where every failure stemmed purely from my own comprehension.
+
+When the scratch network achieved 97% test accuracy after 15 epochs, it was not about bragging rights. It was the quiet satisfaction of seeing a mathematical machine obey the logical constraints I laid out.
+
+## 4. Key Takeaways
+
+A from-scratch project can easily breed the illusion that "I understand everything now" because of lines written. But verbose code is not proof of mastery. If I did it again, I would enforce:
+1. **Isolated layer unit tests:** Test individual forward/backward passes on tiny matrices computable by hand.
+2. **Overfit on 5 samples:** If a model cannot memorize a handful of inputs to near-zero loss, training on the full dataset is pointless.
+3. **Monitor weight distributions:** Track gradient norms and activation histograms, not just the loss scalar.
+
+Building from scratch did not make frameworks less valuable—it taught me why they were designed that way, and when to look beneath the surface to optimize.

@@ -2,10 +2,103 @@
 
 *Logbook 02 · 2023*
 
-I did not come to AI through ChatGPT, a GPU, or a deep-learning course. I came to it through a patch of light. In 2023, I continued a research project on generating electricity from solar heat. The problem sounded fairly direct: if heat came from sunlight, the system needed to face the source. But the sun would not remain still, and the device did not somehow know how far away it was looking. Somewhere between the physics, the mechanical parts, and a pile of wires, I needed to write a program that could detect the light source and help the mechanism follow it. That was the first time I saw code step out of the screen. In my first programming exercises, the result was usually polite. Enter the right input and the program printed the right answer. Get it wrong, and I only needed to inspect a few lines. Real hardware was not that polite. The camera saw differently when the light changed. The mechanism had delay. A movement that looked tiny on screen could become a confusing jerk in the real world. And a system made from software, electronics, and mechanics had many ways to fail without leaving behind a helpful red error message.
+I did not come to AI through ChatGPT, a GPU, or a deep-learning course. I came to it through a patch of light.
 
-I once thought the hardest part would be how to “add AI” to the project. Then I realized that the word AI offered almost no help when the question itself was unclear. What exactly should the system detect? Which coordinates would be useful? When should the mechanism move, and when should it remain still to avoid oscillation? If the camera was wrong for one frame, should the device respond immediately? This was no longer a matter of installing a model and pressing Run. It was the problem of turning an observation into a decision, then turning that decision into movement. Looking back, the system could be described as a small loop: capture an image; locate the light source; compare that location with the center of the system’s view; send a command to adjust the mechanism; observe whether the previous decision made the situation better. It sounds simple. But the fifth step was the one I underestimated most. Without feedback, the system was only guessing and acting. With feedback, it began to resemble something that could correct itself. I also began to understand why a good model inside a notebook does not guarantee a good system outside it. Accuracy is one part. There is also latency, noise, data collection, control logic, and the quality of the hardware. A real AI project often breaks at the connections between components, not because the model is not impressive enough.
+In 2023, I worked on a research project focused on concentrated solar thermal power. The problem sounded direct: if thermal energy comes from direct sunlight, the optical reflector must stay precisely aligned with the solar disk throughout the day. But the sun never stays still in the sky, and mechanical arms have no inherent sense of how far they have drifted off-axis.
 
-The project later received First Prize at the provincial ViSEF competition and Second Prize at the provincial VIFOTEC competition. Those milestones mattered to me, especially because I was still a high-school student trying to learn several unfamiliar things at the same time. But the certificates are not what stayed with me longest. What stayed was the moment I understood that a line of code could observe the physical world, make a decision, and create a change I could see. Before that project, programming felt like a world contained inside the computer. After it, the boundary disappeared. AI was no longer a subject I wanted to “learn about.” It became a way to build a system. If I could return to 2023 with what I know now, I would not begin by choosing a model. I would do four things first: define success for the complete system, not only the detection component; save data under different lighting conditions so I could see where the system failed; build a simple baseline before trying anything complicated; separate perception, decision, and control so each part could be tested on its own. I would also keep a more careful experiment log. At that age, I often changed two or three things together, saw the result improve, and had no idea which change had helped. That is a quick way to make a demonstration. It is a poor way to do research.
+Somewhere between optical physics, mechanical linkages, and an unruly tangle of wiring, I had to write a program that could track the brightest celestial point and guide servo actuators to lock onto it.
 
-A good experiment should not only tell me what worked. It should tell me why I have a reason to believe it worked. After that project, I continued studying programming, neural networks, and AI models. The questions slowly became larger: what is happening inside a neural network, how can a model use fewer resources, and how can AI become a useful part of a system instead of a label placed on top of it? Still, my first question was very small: how could a device know that it was no longer facing the light? Perhaps this is also why I like research. A question specific enough to hold in one’s hand can open a road far longer than expected. And sometimes, a direction begins with teaching a few lines of code to look up at the sun.
+![Schematic of Dual-Axis Solar Tracking System and closed-loop control architecture](assets/writings/solar-tracker-system.jpg)
+
+## 1. When Code Steps Out of the Screen
+
+In introductory programming classes, execution is well-behaved. Enter the right input, and the console spits out the exact expected value. If it fails, you step through a few lines in a debugger.
+
+Real hardware is rarely that polite:
+- Ambient light changes dynamically: transient cloud cover, specular ground reflection distort optical measurements.
+- Physical linkages suffer from mechanical inertia, gearbox backlash, and frictional lag.
+- A tiny micro-adjustment in software can turn into an erratic jerk on the tracker arm.
+- An electromechanical system can fail in a dozen subtle ways without throwing a single red exception message.
+
+That was the first time I realized: **coding for physical hardware requires embracing the noise and uncertainty of the real world.**
+
+## 2. Closed-Loop Feedback and the Deadband Threshold
+
+At the core of the dual-axis tracker is a closed-loop controller that reads four Light Dependent Resistors (LDRs) separated by an orthogonal shadow baffle, computing azimuth and elevation errors:
+
+```cpp
+#include <Servo.h>
+
+// Sensor pin definitions for 4-quadrant optical array
+const int PIN_LDR_TOP_LEFT     = A0;
+const int PIN_LDR_TOP_RIGHT    = A1;
+const int PIN_LDR_BOTTOM_LEFT  = A2;
+const int PIN_LDR_BOTTOM_RIGHT = A3;
+
+// Control hyperparameters
+const int DEADBAND_THRESHOLD   = 15;   // Prevents motor jitter around equilibrium
+const int STEP_DELAY_MS        = 25;   // Control loop sampling period
+
+Servo servoAzimuth;    // East-West axis
+Servo servoElevation;  // Altitude axis
+
+int currentAzimuth = 90;
+int currentElevation = 45;
+
+void updateSolarTracker() {
+    // 1. Sample irradiance across all four quadrants
+    int tl = analogRead(PIN_LDR_TOP_LEFT);
+    int tr = analogRead(PIN_LDR_TOP_RIGHT);
+    int bl = analogRead(PIN_LDR_BOTTOM_LEFT);
+    int br = analogRead(PIN_LDR_BOTTOM_RIGHT);
+
+    // 2. Compute spatial hemifield averages
+    int avgTop    = (tl + tr) / 2;
+    int avgBottom = (bl + br) / 2;
+    int avgLeft   = (tl + bl) / 2;
+    int avgRight  = (tr + br) / 2;
+
+    // 3. Compute directional error gradients
+    int deltaElevation = avgTop - avgBottom;
+    int deltaAzimuth   = avgLeft - avgRight;
+
+    // 4. Update elevation axis with deadband deadzone
+    if (abs(deltaElevation) > DEADBAND_THRESHOLD) {
+        if (deltaElevation > 0 && currentElevation < 140) currentElevation++;
+        else if (deltaElevation < 0 && currentElevation > 15) currentElevation--;
+        servoElevation.write(currentElevation);
+    }
+
+    // 5. Update azimuth axis with deadband deadzone
+    if (abs(deltaAzimuth) > DEADBAND_THRESHOLD) {
+        if (deltaAzimuth > 0 && currentAzimuth < 175) currentAzimuth++;
+        else if (deltaAzimuth < 0 && currentAzimuth > 5) currentAzimuth--;
+        servoAzimuth.write(currentAzimuth);
+    }
+}
+```
+
+> [!NOTE]
+> **Why the Deadband is Essential:** Without a minimal threshold (`DEADBAND_THRESHOLD`), noisy analog readings will cause servos to vibrate continuously (hunting/jitter). This parasitic oscillation wears out gears and wastes more electrical energy than the tracker recovers.
+
+## 3. What "AI" Really Means in an Embedded System
+
+I once thought the hard part would be figuring out how to insert fancy deep learning into the project. But buzzwords offer zero leverage when fundamental problem formulation remains fuzzy.
+
+In reality, the entire system can be decomposed into five stages:
+1. **Perception:** Reading optical intensity gradients across sensors.
+2. **Localization:** Determining the geometric centroid of maximum irradiance.
+3. **Error Analysis:** Comparing observed focal position with the normal vector of the dish.
+4. **Actuation:** Emitting PWM pulses to rotate mechanical linkages.
+5. **Feedback Loop:** Re-evaluating whether that adjustment actually improved solar concentration.
+
+Step five was the most transformative. Without closed feedback, a system is merely blindly guessing and acting. With feedback, it begins to act like an autonomous agent capable of self-correction.
+
+## 4. Reflections from the Field
+
+The project went on to earn **First Prize at Provincial ViSEF** and **Second Prize at Provincial VIFOTEC** in 2023. Those accolades were deeply encouraging for a high-school student exploring engineering. But what stayed with me longest was not the awards—it was the quiet realization that software could:
+- Sense the physical environment,
+- Make reasoned autonomous decisions,
+- Cause deliberate, physical movement toward the sun.
+
+Before that project, programming lived inside a rectangular screen. Afterward, that barrier collapsed. Code became a primary instrument for building real-world systems.
