@@ -824,8 +824,294 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .footer-bottom { align-items: flex-start; flex-direction: column; gap: 14px; }
 }
 
+/* ==========================================================================
+   ENHANCED RESEARCH WORKS (Studies, Papers, Code & Explanations)
+   ========================================================================== */
+.research-works-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 24px;
+}
+.research-work-card {
+  padding: 26px 28px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--line) 12%, var(--page));
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.research-work-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+.research-work-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.research-work-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.research-status {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.research-period {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--muted);
+}
+.research-work-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 680;
+  letter-spacing: -.02em;
+  line-height: 1.35;
+}
+.research-work-abstract {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: 14.5px;
+  line-height: 1.68;
+}
+.research-explanation {
+  margin: 16px 0;
+  padding: 14px 18px;
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, var(--page));
+  border-radius: 0 6px 6px 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+.research-explanation strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--accent);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-family: var(--mono);
+}
+.research-explanation p {
+  margin: 0;
+  color: var(--text);
+}
+.research-work-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.research-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag-badge {
+  font-family: var(--mono);
+  font-size: 7.5px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--line) 35%, transparent);
+  color: var(--muted);
+}
+.research-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.research-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  transition: opacity 150ms ease;
+}
+.research-link-btn:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ==========================================================================
+   ENHANCED VISUAL LIBRARY (Covers, Reflections & Reading Space)
+   ========================================================================== */
+.section-lead {
+  color: var(--muted);
+  font-size: 14px;
+  margin: -6px 0 24px;
+  line-height: 1.6;
+}
+.library-shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+.library-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--line) 10%, var(--page));
+  overflow: hidden;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+.library-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  transform: translateY(-2px);
+}
+.library-cover-wrap {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: #0d0f12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.library-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease;
+}
+.library-card:hover .library-cover {
+  transform: scale(1.03);
+}
+.library-status-pill {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-family: var(--mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.library-content {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.library-card-eyebrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 8px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.library-title {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 680;
+  line-height: 1.35;
+  letter-spacing: -.02em;
+}
+.library-author {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+.library-quote {
+  margin: 0 0 14px;
+  padding: 8px 12px;
+  border-left: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 5%, var(--page));
+  font-family: var(--serif);
+  font-size: 12.5px;
+  font-style: italic;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--text) 90%, var(--muted));
+}
+.library-thoughts {
+  margin-top: auto;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--line) 24%, var(--page));
+  font-size: 13px;
+  line-height: 1.6;
+}
+.thoughts-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.library-thoughts p {
+  margin: 0;
+  color: var(--text);
+}
+.library-link-wrap {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   LOGBOOK THOUGHTS & TIME BADGES
+   ========================================================================== */
+.writing-card-thought {
+  margin: 4px 0 6px;
+  font-size: 12.5px;
+  font-style: italic;
+  color: color-mix(in srgb, var(--accent) 80%, var(--text));
+  line-height: 1.5;
+}
+.writing-card-date {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .library-shelf-grid { grid-template-columns: 1fr; }
+  .research-work-header { flex-direction: column; }
+  .research-work-footer { flex-direction: column; align-items: flex-start; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; }
   .page-content { opacity: 1; transform: none; }
 }
+

@@ -75,9 +75,44 @@
   function renderResearch(page) {
     const directions = (page.directions || []).map(item => `
       <article><span>${escapeHTML(item.number)}</span><div><small>${escapeHTML(item.title)}</small><h3>${escapeHTML(item.question)}</h3><p>${escapeHTML(item.detail)}</p></div></article>`).join('');
+
+    const works = (page.works || []).map(work => {
+      const tags = (work.tags || []).map(t => `<span class="tag-badge">${escapeHTML(t)}</span>`).join('');
+      const links = [];
+      if (work.paperUrl) links.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.paperUrl))}" target="_blank" rel="noreferrer">📄 Paper / Manuscript ${arrow}</a>`);
+      if (work.codeUrl) links.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.codeUrl))}" target="_blank" rel="noreferrer">💻 Source Code ${arrow}</a>`);
+      if (work.demoUrl) links.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.demoUrl))}" target="_blank" rel="noreferrer">⚡ Live Demo ${arrow}</a>`);
+
+      return `
+        <article class="research-work-card">
+          <div class="research-work-header">
+            <div>
+              <div class="research-work-meta">
+                <span class="research-status">${escapeHTML(work.status || 'Research')}</span>
+                ${work.period ? `<time class="research-period">${escapeHTML(work.period)}</time>` : ''}
+              </div>
+              <h3 class="research-work-title">${escapeHTML(work.title)}</h3>
+            </div>
+          </div>
+          <p class="research-work-abstract">${escapeHTML(work.abstract || '')}</p>
+          ${work.explanation ? `
+            <div class="research-explanation">
+              <strong>💡 Bản chất & Giải thích cốt lõi:</strong>
+              <p>${richText(work.explanation)}</p>
+            </div>
+          ` : ''}
+          <div class="research-work-footer">
+            <div class="research-tags">${tags}</div>
+            <div class="research-links">${links.join('')}</div>
+          </div>
+        </article>
+      `;
+    }).join('');
+
     return `${renderPageIntro(page)}
-      <section class="section"><h2>${escapeHTML(page.listTitle)}</h2><div class="research-list">${directions}</div></section>
-      <section class="section"><h2>${escapeHTML(page.methodTitle)}</h2>${renderParagraphs(page.method)}${renderLinks(page.methodLinks)}</section>
+      <section class="section"><h2>${escapeHTML(page.listTitle || 'Current directions')}</h2><div class="research-list">${directions}</div></section>
+      ${works ? `<section class="section"><h2>${escapeHTML(page.worksTitle || 'Công trình & Đề tài nghiên cứu')}</h2><div class="research-works-list">${works}</div></section>` : ''}
+      <section class="section"><h2>${escapeHTML(page.methodTitle || 'Working method')}</h2>${renderParagraphs(page.method)}${renderLinks(page.methodLinks)}</section>
       ${renderReach(page)}<div data-site-footer></div>`;
   }
 
@@ -121,11 +156,47 @@
   }
 
   function renderLibrary(page) {
+    const shelf = (page.shelf || []).map(item => `
+      <article class="library-card">
+        <div class="library-cover-wrap">
+          <img class="library-cover" src="${escapeHTML(safeHref(item.cover || 'assets/books/covers/ai-assisted-programming.jpg'))}" alt="${escapeHTML(item.title)}" loading="lazy">
+          ${item.status ? `<span class="library-status-pill">${escapeHTML(item.status)}</span>` : ''}
+        </div>
+        <div class="library-content">
+          <div class="library-card-eyebrow">
+            <span>${escapeHTML(item.category || 'Reading')}</span>
+            <span>${escapeHTML(item.year || '')}</span>
+          </div>
+          <h3 class="library-title">${escapeHTML(item.title)}</h3>
+          <p class="library-author">${escapeHTML(item.author || '')}</p>
+          ${item.quote ? `<blockquote class="library-quote">${escapeHTML(item.quote)}</blockquote>` : ''}
+          ${item.thoughts ? `
+            <div class="library-thoughts">
+              <span class="thoughts-label">💭 Góc đúc kết & chia sẻ:</span>
+              <p>${richText(item.thoughts)}</p>
+            </div>
+          ` : ''}
+          ${item.link ? `<div class="library-link-wrap"><a href="${escapeHTML(safeHref(item.link))}" target="_blank" rel="noreferrer">Tìm hiểu thêm ${arrow}</a></div>` : ''}
+        </div>
+      </article>
+    `).join('');
+
     const items = (page.items || []).map((item, index) => `
       <div><span>${String(index + 1).padStart(2, '0')}</span><div><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.detail)}</p></div></div>`).join('');
+
     return `${renderPageIntro(page)}
-      <section class="section"><h2>${escapeHTML(page.listTitle)}</h2><div class="library-list">${items}</div></section>
-      <section class="section reach"><h2>${escapeHTML(page.noteTitle)}</h2><p class="prose">${richText(page.note)}</p>${renderLinks(page.noteLinks)}</section>
+      ${shelf ? `
+        <section class="section">
+          <div class="heading-row">
+            <h2>${escapeHTML(page.shelfTitle || 'Tủ sách & Tài liệu đúc kết')}</h2>
+            <span>${(page.shelf || []).length} Tác phẩm</span>
+          </div>
+          <p class="section-lead">${escapeHTML(page.shelfSubtitle || 'Những cuốn sách, tài liệu và công trình đã định hình tư duy của tôi, kèm theo đúc kết cá nhân.')}</p>
+          <div class="library-shelf-grid">${shelf}</div>
+        </section>
+      ` : ''}
+      <section class="section"><h2>${escapeHTML(page.listTitle || 'Reading map')}</h2><div class="library-list">${items}</div></section>
+      <section class="section reach"><h2>${escapeHTML(page.noteTitle || 'Notes')}</h2><p class="prose">${richText(page.note)}</p>${renderLinks(page.noteLinks)}</section>
       <div data-site-footer></div>`;
   }
 

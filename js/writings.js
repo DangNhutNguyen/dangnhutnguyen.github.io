@@ -543,6 +543,9 @@
         legacy.readingTime ||
         '',
       category: categoryFor(item, language),
+      date: item.date || translation.date || '',
+      updatedAt: item.updatedAt || translation.updatedAt || '',
+      thought: item.thought || translation.thought || '',
     };
   }
 
@@ -607,15 +610,18 @@
 
       const card = element('div', 'writing-card-content');
       const meta = element('div', 'writing-card-eyebrow');
+      const dateText = localized.date || item.date || '';
       meta.append(
         element('span', '', localized.category),
-        element('span', '', localized.readingTime),
+        element('span', '', `${dateText ? dateText + ' · ' : ''}${localized.readingTime}`),
       );
-      card.append(
-        meta,
-        element('h3', '', localized.title),
-        element('p', '', localized.summary),
-      );
+      card.append(meta, element('h3', '', localized.title));
+
+      const thoughtText = localized.thought || item.thought || '';
+      if (thoughtText) {
+        card.append(element('p', 'writing-card-thought', `💭 ${thoughtText}`));
+      }
+      card.append(element('p', '', localized.summary));
 
       const footer = element('div', 'writing-card-footer');
       const read = element('strong', '', labels.read);
@@ -685,14 +691,17 @@
       mount.append(toolbar);
 
       const header = element('header', 'writing-article-header');
+      const dateText = localized.date || item.date || '';
       header.append(
-        element('p', 'overline', `${localized.category} · ${item.index}`),
+        element('p', 'overline', `${localized.category} · #${item.index}${dateText ? ' · ' + dateText : ''}`),
       );
       header.append(element('h1', '', localized.title));
+
       const meta = element('div', 'writing-meta');
+      const timeDetail = dateText ? (item.updatedAt ? `Mốc: ${dateText} (Cập nhật: ${item.updatedAt})` : `Thời gian: ${dateText}`) : '';
       meta.append(
         element('span', '', localized.logbook),
-        element('span', '', localized.readingTime),
+        element('span', '', `${timeDetail ? timeDetail + ' · ' : ''}${localized.readingTime}`),
       );
       header.append(meta);
       mount.append(header);

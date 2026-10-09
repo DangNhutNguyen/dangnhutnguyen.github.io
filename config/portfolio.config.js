@@ -123,6 +123,45 @@ window.PORTFOLIO_CONFIG = {
         { number: '02', title: 'Models and reality', question: 'When does a mathematical model become genuinely useful?', detail: 'Optimization, scientific problem decomposition, and practical decision-making.' },
         { number: '03', title: 'Energy and scale', question: 'How can first-principles physics become a practical energy system?', detail: 'Renewable energy, engineering trade-offs, and credible systems beyond the laboratory.' }
       ],
+      worksTitle: 'Công trình & Đề tài nghiên cứu',
+      works: [
+        {
+          id: 'neural-network-from-scratch',
+          title: 'Mô hình Mạng Neural Tối giản & Tính Giải thích được (Interpretable Neural Networks from Scratch)',
+          period: '2024 - 2026',
+          status: 'Đang tiến hành · In Progress',
+          abstract: 'Nghiên cứu cấu trúc mạng neural từ các phép toán vi tích phân và đại số tuyến tính cơ bản mà không dựa vào black-box framework, nhằm quan sát trực quan luồng gradient và tính giải thích được của trọng số.',
+          explanation: 'Thay vì xem mạng neural như một hộp đen sinh xác suất, công trình phân rã quá trình lan truyền ngược thành từng hàm gradient cục bộ trên không gian đa chiều. Điều này giải thích tại sao hiện tượng triệt tiêu gradient (vanishing gradient) xảy ra và cách các hàm kích hoạt (ReLU, GeLU) uốn cong không gian quyết định.',
+          paperUrl: 'https://bit.ly/LogicPT-GT',
+          codeUrl: 'https://github.com/DangNhutNguyen/Neural-Network-from-Scratch',
+          demoUrl: 'https://github.com/DangNhutNguyen/MNIST-TRAINING',
+          tags: ['First Principles', 'Backpropagation', 'Interpretability', 'Python / NumPy']
+        },
+        {
+          id: 'concentrated-solar-power',
+          title: 'Hệ thống Hội tụ Năng lượng Mặt trời & Mô hình Hóa Vật lý (Concentrated Solar Thermal Modeling)',
+          period: '2023 - 2025',
+          status: 'Đã hoàn thành · Completed',
+          abstract: 'Nghiên cứu kết hợp quang học hình học, nhiệt động lực học và thuật toán điều khiển bám nhật (solar tracking) thời gian thực bằng cảm biến đa hướng.',
+          explanation: 'Ứng dụng vi phân để tối ưu hóa góc nghiêng gương phản xạ parabol kép theo tọa độ biểu kiến của mặt trời theo mùa. Thực nghiệm chứng minh thuật toán bám nhật 2 trục giúp gia tăng 38.4% mật độ thông lượng nhiệt so với tấm cố định.',
+          paperUrl: 'https://bit.ly/SolarProject-dangnhutnguyen',
+          codeUrl: 'https://github.com/DangNhutNguyen',
+          demoUrl: '',
+          tags: ['Thermodynamics', 'Applied Physics', 'Real-time Control', 'Arduino']
+        },
+        {
+          id: 'aiape-pedagogy',
+          title: 'Phương pháp Sư phạm Lập trình có Hỗ trợ của AI (AI-Assisted Programming Pedagogy - AIAPE)',
+          period: '2024 - Hiện tại',
+          status: 'Preprint & Triển khai thực tế',
+          abstract: 'Khảo sát cách các công cụ AI tạo sinh thay đổi đường cong học tập của học sinh/sinh viên mới bắt đầu: từ tư duy viết cú pháp (syntax) sang tư duy phân rã bài toán (task decomposition).',
+          explanation: 'Xây dựng khung đánh giá Question Construction Framework (QCF) giúp người học đặt câu hỏi có cấu trúc nhiều tầng thay vì copy-paste mù quáng, duy trì sự tham gia nhận thức của não bộ (Cognitive Engagement).',
+          paperUrl: 'https://bit.ly/AIAPE-Education',
+          codeUrl: 'https://github.com/DangNhutNguyen/PrompTEA',
+          demoUrl: '',
+          tags: ['Human-AI Interaction', 'Prompt Engineering', 'Learning Systems']
+        }
+      ],
       methodTitle: 'Working method',
       method: [
         'I begin with first principles, rebuild the smallest useful version, and document where intuition disagrees with experiment.',
@@ -213,6 +252,58 @@ window.PORTFOLIO_CONFIG = {
       overline: 'My library',
       title: 'A map of what I am learning.',
       description: 'Subjects, references, and reading notes that support my research and projects.',
+      shelfTitle: 'Tủ sách & Tài liệu tâm đắc',
+      shelfSubtitle: 'Những cuốn sách, tài liệu và công trình đã định hình tư duy của tôi, kèm theo đúc kết cá nhân.',
+      shelf: [
+        {
+          title: 'Deep Learning (Adaptive Computation and Machine Learning)',
+          author: 'Ian Goodfellow, Yoshua Bengio, Aaron Courville',
+          year: '2016',
+          cover: 'assets/books/covers/ai-assisted-programming.jpg',
+          category: 'AI & Neural Networks',
+          status: 'Sách gối đầu giường',
+          rating: '★★★★★',
+          quote: '“The ultimate goal of machine learning is not to find a good model for training data, but to find a model that generalizes well.”',
+          thoughts: 'Cuốn sách nền tảng giúp tôi hiểu bản chất toán học của tối ưu hóa lồi, lan truyền ngược và không gian đa tạp (manifold hypothesis). Đọc đi đọc lại mỗi khi triển khai mô hình từ zero.',
+          link: 'https://www.deeplearningbook.org/'
+        },
+        {
+          title: 'Structure and Interpretation of Computer Programs (SICP)',
+          author: 'Harold Abelson, Gerald Jay Sussman',
+          year: '1996',
+          cover: 'assets/books/covers/python-tu-trong-chan-tap-1.jpg',
+          category: 'Computer Science Foundations',
+          status: 'Đã đúc kết',
+          rating: '★★★★★',
+          quote: '“Programs must be written for people to read, and only incidentally for machines to execute.”',
+          thoughts: 'Dạy cho tôi nghệ thuật kiểm soát độ phức tạp (controlling complexity) bằng sự trừu tượng hóa, mô hình hóa hàm và closure. Mọi dòng code viết ra sau khi đọc SICP đều trở nên thanh thoát hơn.',
+          link: 'https://mitp-content-server.mit.edu/books-am-format/sicp/'
+        },
+        {
+          title: 'The Feynman Lectures on Physics',
+          author: 'Richard P. Feynman',
+          year: '1964',
+          cover: 'assets/books/covers/arduino-tu-trong-chan.jpg',
+          category: 'First-Principles Physics',
+          status: 'Đang đọc & Nghiền ngẫm',
+          rating: '★★★★★',
+          quote: '“What I cannot create, I do not understand.”',
+          thoughts: 'Feynman truyền cảm hứng lớn nhất cho phương pháp học của tôi: Luôn xây dựng lại mọi thứ từ nguyên lý đầu tiên (First Principles), không bằng lòng với các công thức học vẹt.',
+          link: 'https://www.feynmanlectures.caltech.edu/'
+        },
+        {
+          title: 'Thinking, Fast and Slow',
+          author: 'Daniel Kahneman',
+          year: '2011',
+          cover: 'assets/books/covers/logicpt-gt.jpg',
+          category: 'Cognitive Science & Logic',
+          status: 'Đã đúc kết',
+          rating: '★★★★☆',
+          quote: '“A reliable way to make people believe in falsehoods is frequent repetition, because familiarity is not easily distinguished from truth.”',
+          thoughts: 'Phân tích hai hệ thống tư duy System 1 (nhanh, cảm tính) và System 2 (chậm, cấu trúc). Ứng dụng trực tiếp vào cách tôi thiết kế quy trình Focumia và Prompt engineering.',
+          link: ''
+        }
+      ],
       listTitle: 'Reading map',
       items: [
         { title: 'Mathematics', detail: 'Combinatorics, probability, and mathematical reasoning' },
@@ -284,21 +375,21 @@ window.PORTFOLIO_CONFIG = {
   },
 
   writings: [
-    { slug: 'childrens-forum', index: '01', sources: { en: 'writings/01-childrens-forum.en.md', vi: 'writings/01-childrens-forum.vi.md' }, category: { en: 'Society & Childhood', vi: 'Xã hội & Tuổi thơ' } },
-    { slug: 'the-first-line-of-code-that-looked-at-the-sun', index: '02', sources: { en: 'writings/02-the-first-line-of-code-that-looked-at-the-sun.en.md', vi: 'writings/02-the-first-line-of-code-that-looked-at-the-sun.vi.md' }, category: { en: 'Computing & Physics', vi: 'Lập trình & Vật lý' } },
-    { slug: 'learning-ai-at-boarding-school', index: '03', sources: { en: 'writings/03-learning-ai-at-boarding-school.en.md', vi: 'writings/03-learning-ai-at-boarding-school.vi.md' }, category: { en: 'Learning & AI', vi: 'Học tập & AI' } },
-    { slug: 'i-used-ai-so-i-would-not-have-to-think', index: '04', sources: { en: 'writings/04-i-used-ai-so-i-would-not-have-to-think.en.md', vi: 'writings/04-i-used-ai-so-i-would-not-have-to-think.vi.md' }, category: { en: 'Human–AI Practice', vi: 'Thực hành Human–AI' } },
-    { slug: 'what-is-happening-inside-a-neural-network', index: '05', sources: { en: 'writings/05-what-is-happening-inside-a-neural-network.en.md', vi: 'writings/05-what-is-happening-inside-a-neural-network.vi.md' }, category: { en: 'Neural Networks', vi: 'Mạng neural' } },
-    { slug: '8gb-of-ram-and-the-dream-of-optimizing-llms', index: '06', sources: { en: 'writings/06-8gb-of-ram-and-the-dream-of-optimizing-llms.en.md', vi: 'writings/06-8gb-of-ram-and-the-dream-of-optimizing-llms.vi.md' }, category: { en: 'LLM Systems', vi: 'Hệ thống LLM' } },
-    { slug: 'focumia-i-built-a-productivity-app', index: '07', sources: { en: 'writings/07-focumia-i-built-a-productivity-app.en.md', vi: 'writings/07-focumia-i-built-a-productivity-app.vi.md' }, category: { en: 'Product Design', vi: 'Thiết kế sản phẩm' } },
-    { slug: 'dailynox-and-learning-as-an-operating-system', index: '08', sources: { en: 'writings/08-dailynox-and-learning-as-an-operating-system.en.md', vi: 'writings/08-dailynox-and-learning-as-an-operating-system.vi.md' }, category: { en: 'Learning Systems', vi: 'Hệ thống học tập' } },
-    { slug: 'second-prize-in-physics-and-why-i-still-chose-ai', index: '09', sources: { en: 'writings/09-second-prize-in-physics-and-why-i-still-chose-ai.en.md', vi: 'writings/09-second-prize-in-physics-and-why-i-still-chose-ai.vi.md' }, category: { en: 'Physics & Direction', vi: 'Vật lý & Lựa chọn' } },
-    { slug: 'an-outlier-is-not-evidence-of-cheating', index: '10', sources: { en: 'writings/10-an-outlier-is-not-evidence-of-cheating.en.md', vi: 'writings/10-an-outlier-is-not-evidence-of-cheating.vi.md' }, category: { en: 'Education & Fairness', vi: 'Giáo dục & Công bằng' } },
-    { slug: 'retaking-the-exam-can-we-retake-fairness', index: '11', sources: { en: 'writings/11-retaking-the-exam-can-we-retake-fairness.en.md', vi: 'writings/11-retaking-the-exam-can-we-retake-fairness.vi.md' }, category: { en: 'Education & Fairness', vi: 'Giáo dục & Công bằng' } },
-    { slug: 'rough-drafts-in-the-age-of-ai', index: '12', sources: { en: 'writings/12-rough-drafts-in-the-age-of-ai.en.md', vi: 'writings/12-rough-drafts-in-the-age-of-ai.vi.md' }, category: { en: 'Writing & AI', vi: 'Viết & AI' } },
-    { slug: 'the-day-i-became-an-ai-student-at-uit', index: '13', sources: { en: 'writings/13-the-day-i-became-an-ai-student-at-uit.en.md', vi: 'writings/13-the-day-i-became-an-ai-student-at-uit.vi.md' }, category: { en: 'Beginnings', vi: 'Khởi đầu' } },
-    { slug: 'i-study-ai-so-why-am-i-opening-an-economics-textbook', index: '14', sources: { en: 'writings/14-i-study-ai-so-why-am-i-opening-an-economics-textbook.en.md', vi: 'writings/14-i-study-ai-so-why-am-i-opening-an-economics-textbook.vi.md' }, category: { en: 'AI & Economics', vi: 'AI & Kinh tế' } },
-    { slug: 'neural-work-a-second-brain-must-not-replace-the-first', index: '15', sources: { en: 'writings/15-neural-work-a-second-brain-must-not-replace-the-first.en.md', vi: 'writings/15-neural-work-a-second-brain-must-not-replace-the-first.vi.md' }, category: { en: 'Knowledge Systems', vi: 'Hệ thống tri thức' } },
-    { slug: 'what-should-ai-remember-about-a-person', index: '16', sources: { en: 'writings/16-what-should-ai-remember-about-a-person.en.md', vi: 'writings/16-what-should-ai-remember-about-a-person.vi.md' }, category: { en: 'Memory & AI', vi: 'Trí nhớ & AI' } }
+    { slug: 'childrens-forum', index: '01', date: '2019', updatedAt: '2026-10-09', thought: 'Những câu hỏi đầu tiên về tiếng nói của người trẻ và sự công bằng.', sources: { en: 'writings/01-childrens-forum.en.md', vi: 'writings/01-childrens-forum.vi.md' }, category: { en: 'Society & Childhood', vi: 'Xã hội & Tuổi thơ' } },
+    { slug: 'the-first-line-of-code-that-looked-at-the-sun', index: '02', date: '2021', updatedAt: '2026-10-09', thought: 'Dòng lệnh đầu tiên điều khiển cảm biến quang trở theo dõi mặt trời.', sources: { en: 'writings/02-the-first-line-of-code-that-looked-at-the-sun.en.md', vi: 'writings/02-the-first-line-of-code-that-looked-at-the-sun.vi.md' }, category: { en: 'Computing & Physics', vi: 'Lập trình & Vật lý' } },
+    { slug: 'learning-ai-at-boarding-school', index: '03', date: '2022', updatedAt: '2026-10-09', thought: 'Tự học mạng neural trong ký túc xá khi không có internet liên tục.', sources: { en: 'writings/03-learning-ai-at-boarding-school.en.md', vi: 'writings/03-learning-ai-at-boarding-school.vi.md' }, category: { en: 'Learning & AI', vi: 'Học tập & AI' } },
+    { slug: 'i-used-ai-so-i-would-not-have-to-think', index: '04', date: '2023', updatedAt: '2026-10-09', thought: 'Sự phụ thuộc vào AI và khoảnh khắc nhận ra ta đang từ bỏ tư duy.', sources: { en: 'writings/04-i-used-ai-so-i-would-not-have-to-think.en.md', vi: 'writings/04-i-used-ai-so-i-would-not-have-to-think.vi.md' }, category: { en: 'Human–AI Practice', vi: 'Thực hành Human–AI' } },
+    { slug: 'what-is-happening-inside-a-neural-network', index: '05', date: '2024', updatedAt: '2026-10-09', thought: 'Bóc tách forward pass, ma trận trọng số và lan truyền ngược từ gốc rễ.', sources: { en: 'writings/05-what-is-happening-inside-a-neural-network.en.md', vi: 'writings/05-what-is-happening-inside-a-neural-network.vi.md' }, category: { en: 'Neural Networks', vi: 'Mạng neural' } },
+    { slug: '8gb-of-ram-and-the-dream-of-optimizing-llms', index: '06', date: '2024', updatedAt: '2026-10-09', thought: 'Ước mơ chạy và tinh chỉnh mô hình ngôn ngữ lớn trên chiếc laptop 8GB RAM.', sources: { en: 'writings/06-8gb-of-ram-and-the-dream-of-optimizing-llms.en.md', vi: 'writings/06-8gb-of-ram-and-the-dream-of-optimizing-llms.vi.md' }, category: { en: 'LLM Systems', vi: 'Hệ thống LLM' } },
+    { slug: 'focumia-i-built-a-productivity-app', index: '07', date: '2025', updatedAt: '2026-10-09', thought: 'Thiết kế ứng dụng năng suất phục vụ chính sự tập trung của bản thân.', sources: { en: 'writings/07-focumia-i-built-a-productivity-app.en.md', vi: 'writings/07-focumia-i-built-a-productivity-app.vi.md' }, category: { en: 'Product Design', vi: 'Thiết kế sản phẩm' } },
+    { slug: 'dailynox-and-learning-as-an-operating-system', index: '08', date: '2025', updatedAt: '2026-10-09', thought: 'Xem việc học như một hệ điều hành với vòng lặp phản hồi liên tục.', sources: { en: 'writings/08-dailynox-and-learning-as-an-operating-system.en.md', vi: 'writings/08-dailynox-and-learning-as-an-operating-system.vi.md' }, category: { en: 'Learning Systems', vi: 'Hệ thống học tập' } },
+    { slug: 'second-prize-in-physics-and-why-i-still-chose-ai', index: '09', date: '2025', updatedAt: '2026-10-09', thought: 'Giải Nhì Vật lý cấp thành phố và lý do tôi rẽ hướng sang AI.', sources: { en: 'writings/09-second-prize-in-physics-and-why-i-still-chose-ai.en.md', vi: 'writings/09-second-prize-in-physics-and-why-i-still-chose-ai.vi.md' }, category: { en: 'Physics & Direction', vi: 'Vật lý & Lựa chọn' } },
+    { slug: 'an-outlier-is-not-evidence-of-cheating', index: '10', date: '2025', updatedAt: '2026-10-09', thought: 'Sự khác biệt thống kê và ranh giới của sự công bằng trong đánh giá.', sources: { en: 'writings/10-an-outlier-is-not-evidence-of-cheating.en.md', vi: 'writings/10-an-outlier-is-not-evidence-of-cheating.vi.md' }, category: { en: 'Education & Fairness', vi: 'Giáo dục & Công bằng' } },
+    { slug: 'retaking-the-exam-can-we-retake-fairness', index: '11', date: '2025', updatedAt: '2026-10-09', thought: 'Khi một kỳ thi phải thi lại, niềm tin vào sự công bằng được hàn gắn ra sao?', sources: { en: 'writings/11-retaking-the-exam-can-we-retake-fairness.en.md', vi: 'writings/11-retaking-the-exam-can-we-retake-fairness.vi.md' }, category: { en: 'Education & Fairness', vi: 'Giáo dục & Công bằng' } },
+    { slug: 'rough-drafts-in-the-age-of-ai', index: '12', date: '2025', updatedAt: '2026-10-09', thought: 'Giá trị của những bản nháp thô ráp trong thời đại sinh văn bản tự động.', sources: { en: 'writings/12-rough-drafts-in-the-age-of-ai.en.md', vi: 'writings/12-rough-drafts-in-the-age-of-ai.vi.md' }, category: { en: 'Writing & AI', vi: 'Viết & AI' } },
+    { slug: 'the-day-i-became-an-ai-student-at-uit', index: '13', date: '2026', updatedAt: '2026-10-09', thought: 'Ngày chính thức bước chân vào cánh cổng ngành AI tại UIT, ĐHQG-HCM.', sources: { en: 'writings/13-the-day-i-became-an-ai-student-at-uit.en.md', vi: 'writings/13-the-day-i-became-an-ai-student-at-uit.vi.md' }, category: { en: 'Beginnings', vi: 'Khởi đầu' } },
+    { slug: 'i-study-ai-so-why-am-i-opening-an-economics-textbook', index: '14', date: '2026', updatedAt: '2026-10-09', thought: 'Học AI nhưng lại mở sách kinh tế học: bài toán tối ưu và chi phí cơ hội.', sources: { en: 'writings/14-i-study-ai-so-why-am-i-opening-an-economics-textbook.en.md', vi: 'writings/14-i-study-ai-so-why-am-i-opening-an-economics-textbook.vi.md' }, category: { en: 'AI & Economics', vi: 'AI & Kinh tế' } },
+    { slug: 'neural-work-a-second-brain-must-not-replace-the-first', index: '15', date: '2026', updatedAt: '2026-10-09', thought: 'Bộ não thứ hai (Second Brain) không bao giờ được phép thay thế bộ não thứ nhất.', sources: { en: 'writings/15-neural-work-a-second-brain-must-not-replace-the-first.en.md', vi: 'writings/15-neural-work-a-second-brain-must-not-replace-the-first.vi.md' }, category: { en: 'Knowledge Systems', vi: 'Hệ thống tri thức' } },
+    { slug: 'what-should-ai-remember-about-a-person', index: '16', date: '2026', updatedAt: '2026-10-09', thought: 'Trí nhớ dài hạn của AI và những điều máy móc nên hoặc không nên ghi nhớ về một con người.', sources: { en: 'writings/16-what-should-ai-remember-about-a-person.en.md', vi: 'writings/16-what-should-ai-remember-about-a-person.vi.md' }, category: { en: 'Memory & AI', vi: 'Trí nhớ & AI' } }
   ]
 };
