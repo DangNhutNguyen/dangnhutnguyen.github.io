@@ -31,8 +31,32 @@
           <p>Research logs, learning notes, and project retrospectives. Written slowly, revised carefully.</p>
         </header>
 
-        <section class="section writing-index-section">
-          <div class="heading-row"><h2>Notebook</h2><span data-writing-count>Loading notes</span></div>
+        <!-- 1. RESEARCH INTERESTS (Rendered dynamically if content exists) -->
+        <section class="section writing-interests-section" data-writing-interests style="display:none;"></section>
+
+        <!-- 2. PROJECTS & EXPLORATIONS (Rendered dynamically if content exists) -->
+        <section class="section writing-explorations-section" data-writing-explorations style="display:none;"></section>
+
+        <!-- 3. MEMORIES & MILESTONES (Rendered dynamically if content exists) -->
+        <section class="section writing-memories-section" data-writing-memories style="display:none;"></section>
+
+        <!-- 4. SHARED FIELD NOTES ARCHIVE -->
+        <section class="section writings-archive-section" data-writings-archive>
+          <div class="writings-archive-header">
+            <div class="heading-row">
+              <div>
+                <p class="overline" data-writings-overline>Archive</p>
+                <h2 data-writings-heading>Shared Field Notes &amp; Logbooks</h2>
+              </div>
+              <div class="writing-header-controls">
+                <span class="writing-count-badge" data-writing-count>Loading notes</span>
+                <div class="writing-language-control" data-writing-language-control></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="writing-filter-toolbar" data-writing-filter-bar></div>
+
           <div class="writing-index" data-writing-list>
             <noscript><p class="writing-notice">Enable JavaScript to load the writing archive.</p></noscript>
           </div>

@@ -79,9 +79,9 @@
     const works = (page.works || []).map(work => {
       const tags = (work.tags || []).map(t => `<span class="tag-badge">${escapeHTML(t)}</span>`).join('');
       const links = [];
-      if (work.paperUrl) links.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.paperUrl))}" target="_blank" rel="noreferrer">📄 Paper / Manuscript ${arrow}</a>`);
-      if (work.codeUrl) links.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.codeUrl))}" target="_blank" rel="noreferrer">💻 Source Code ${arrow}</a>`);
-      if (work.demoUrl) links.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.demoUrl))}" target="_blank" rel="noreferrer">⚡ Live Demo ${arrow}</a>`);
+      if (work.paperUrl) links.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.paperUrl))}" target="_blank" rel="noreferrer">Paper / Manuscript ${arrow}</a>`);
+      if (work.codeUrl) links.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.codeUrl))}" target="_blank" rel="noreferrer">Source Code ${arrow}</a>`);
+      if (work.demoUrl) links.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.demoUrl))}" target="_blank" rel="noreferrer">Live Demo ${arrow}</a>`);
 
       return `
         <article class="research-work-card">
@@ -91,19 +91,24 @@
                 <span class="research-status">${escapeHTML(work.status || 'Research')}</span>
                 ${work.period ? `<time class="research-period">${escapeHTML(work.period)}</time>` : ''}
               </div>
-              <h3 class="research-work-title">${escapeHTML(work.title)}</h3>
+              <h3 class="research-work-title">
+                <a class="research-title-link" href="research-detail.html?id=${encodeURIComponent(work.id)}">${escapeHTML(work.title)}</a>
+              </h3>
             </div>
           </div>
           <p class="research-work-abstract">${escapeHTML(work.abstract || '')}</p>
           ${work.explanation ? `
             <div class="research-explanation">
-              <strong>💡 Bản chất & Giải thích cốt lõi:</strong>
+              <strong>Core Mechanism:</strong>
               <p>${richText(work.explanation)}</p>
             </div>
           ` : ''}
           <div class="research-work-footer">
             <div class="research-tags">${tags}</div>
-            <div class="research-links">${links.join('')}</div>
+            <div class="research-links">
+              <a class="research-dossier-btn" href="research-detail.html?id=${encodeURIComponent(work.id)}">Research Dossier ${arrow}</a>
+              ${links.join('')}
+            </div>
           </div>
         </article>
       `;
@@ -111,9 +116,141 @@
 
     return `${renderPageIntro(page)}
       <section class="section"><h2>${escapeHTML(page.listTitle || 'Current directions')}</h2><div class="research-list">${directions}</div></section>
-      ${works ? `<section class="section"><h2>${escapeHTML(page.worksTitle || 'Công trình & Đề tài nghiên cứu')}</h2><div class="research-works-list">${works}</div></section>` : ''}
+      ${works ? `<section class="section"><h2>${escapeHTML(page.worksTitle || 'Research Works & Initiatives')}</h2><div class="research-works-list">${works}</div></section>` : ''}
       <section class="section"><h2>${escapeHTML(page.methodTitle || 'Working method')}</h2>${renderParagraphs(page.method)}${renderLinks(page.methodLinks)}</section>
       ${renderReach(page)}<div data-site-footer></div>`;
+  }
+
+  function renderResearchDetail() {
+    const researchPage = config.pages?.research || {};
+    const works = researchPage.works || [];
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    const work = works.find(w => w.id === id) || works[0];
+
+    if (!work) {
+      return `
+        <div class="research-detail-notfound">
+          <a class="writing-back" href="research.html"><span aria-hidden="true">&larr;</span> All research directions</a>
+          <h2>Research initiative not found.</h2>
+          <p>The requested initiative may have moved or is not yet configured.</p>
+        </div>
+      `;
+    }
+
+    if (work.title) {
+      document.title = `${work.title} - Nguyễn Huỳnh Đăng Nhựt`;
+    }
+
+    const tags = (work.tags || []).map(t => `<span class="tag-badge">${escapeHTML(t)}</span>`).join('');
+    const resourceLinks = [];
+    if (work.paperUrl) resourceLinks.push(`<a class="research-link-btn primary" href="${escapeHTML(safeHref(work.paperUrl))}" target="_blank" rel="noreferrer">Paper / Manuscript ${arrow}</a>`);
+    if (work.codeUrl) resourceLinks.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.codeUrl))}" target="_blank" rel="noreferrer">Source Code ${arrow}</a>`);
+    if (work.demoUrl) resourceLinks.push(`<a class="research-link-btn" href="${escapeHTML(safeHref(work.demoUrl))}" target="_blank" rel="noreferrer">Live Demo ${arrow}</a>`);
+
+    let relatedHtml = '';
+    const relatedSlugs = work.relatedWritings || [];
+    const allWritings = config.writings || [];
+    if (relatedSlugs.length) {
+      const relatedCards = relatedSlugs.map(slug => {
+        const item = allWritings.find(w => w.slug === slug);
+        if (!item) return '';
+        const cat = typeof item.category === 'object' ? (item.category.en || item.category.vi) : item.category;
+        const thought = typeof item.thought === 'object' ? (item.thought.en || item.thought.vi) : item.thought;
+        return `
+          <a class="research-related-card" href="writing.html?slug=${encodeURIComponent(item.slug)}">
+            <span class="research-related-index">Logbook ${escapeHTML(item.index || '')}</span>
+            <div class="research-related-body">
+              <h4>${escapeHTML(thought || item.slug)}</h4>
+              <p>${escapeHTML(cat || '')} · ${escapeHTML(item.date || '')}</p>
+            </div>
+            ${arrow}
+          </a>
+        `;
+      }).filter(Boolean).join('');
+
+      if (relatedCards) {
+        relatedHtml = `
+          <section class="research-detail-section">
+            <h3>Connected Logbooks & Field Notes</h3>
+            <div class="research-related-grid">${relatedCards}</div>
+          </section>
+        `;
+      }
+    }
+
+    return `
+      <div class="research-detail-container">
+        <a class="writing-back" href="research.html"><span aria-hidden="true">&larr;</span> All research directions</a>
+        
+        <header class="research-detail-header">
+          <div class="research-work-meta">
+            <span class="research-status">${escapeHTML(work.status || 'Research')}</span>
+            <time class="research-period">${escapeHTML(work.period || '')}</time>
+          </div>
+          <h1 class="research-detail-title">${escapeHTML(work.title)}</h1>
+          <div class="research-detail-tags">${tags}</div>
+          ${resourceLinks.length ? `<div class="research-detail-actions">${resourceLinks.join('')}</div>` : ''}
+        </header>
+
+        <div class="research-detail-body">
+          <section class="research-detail-section">
+            <h3>Abstract & Background</h3>
+            <div class="research-abstract-box">
+              <p class="prose">${richText(work.abstract || '')}</p>
+              ${work.overview ? `<p class="prose" style="margin-top:14px;">${richText(work.overview)}</p>` : ''}
+            </div>
+          </section>
+
+          ${work.firstPrinciples ? `
+            <section class="research-detail-section">
+              <h3>First-Principles Foundation</h3>
+              <div class="research-theory-box">
+                <p class="prose">${richText(work.firstPrinciples)}</p>
+              </div>
+            </section>
+          ` : ''}
+
+          ${work.explanation ? `
+            <section class="research-detail-section">
+              <h3>Core Mechanism & Theoretical Framework</h3>
+              <div class="research-explanation">
+                <p class="prose">${richText(work.explanation)}</p>
+              </div>
+            </section>
+          ` : ''}
+
+          ${work.methodology ? `
+            <section class="research-detail-section">
+              <h3>Methodology & Implementation Architecture</h3>
+              <p class="prose">${richText(work.methodology)}</p>
+            </section>
+          ` : ''}
+
+          ${work.findings ? `
+            <section class="research-detail-section">
+              <h3>Empirical Findings & Breakthroughs</h3>
+              <div class="research-results-box">
+                <p class="prose">${richText(work.findings)}</p>
+              </div>
+            </section>
+          ` : ''}
+
+          ${relatedHtml}
+
+          <section class="section reach" style="margin-top:40px; padding-top:24px; border-top:1px solid var(--line);">
+            <h3>Academic Inquiry & Collaboration</h3>
+            <p class="prose">If you have scientific questions, feedback, or would like to discuss collaboration on this research direction, please reach out via email.</p>
+            <div class="inline-links">
+              <a href="mailto:${escapeHTML(config.site?.email || 'penciltalk0910@gmail.com')}">Discuss via Email ${arrow}</a>
+              ${work.codeUrl ? `<a href="${escapeHTML(safeHref(work.codeUrl))}" target="_blank" rel="noreferrer">Source Repository ${arrow}</a>` : ''}
+            </div>
+          </section>
+        </div>
+
+        <div data-site-footer></div>
+      </div>
+    `;
   }
 
   function renderProjects(page) {
@@ -147,67 +284,111 @@
   }
 
   function renderActivities(page) {
-    const timeline = (page.items || []).map(item => `
-      <div><time>${escapeHTML(item.year)}</time><div><small>${escapeHTML(item.type)}</small><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.place)}</p></div></div>`).join('');
+    const memories = config.pages?.writing?.memories || [];
+    const timeline = (page.items || []).map(item => {
+      const actions = [];
+      if (item.storySlug) {
+        actions.push(`<a class="timeline-action-link" href="writing.html?slug=${encodeURIComponent(item.storySlug)}">Story logbook ${arrow}</a>`);
+      }
+      if (item.albumId) {
+        actions.push(`<a class="timeline-action-link album" href="album-viewer.html?id=${encodeURIComponent(item.albumId)}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Memory Album ${arrow}</a>`);
+      }
+      if (item.link) {
+        actions.push(`<a class="timeline-action-link" href="${escapeHTML(safeHref(item.link))}" target="_blank" rel="noreferrer">${escapeHTML(item.linkLabel || 'View details')} ${arrow}</a>`);
+      }
+      const actionsHtml = actions.length ? `<div class="timeline-actions">${actions.join('')}</div>` : '';
+
+      return `
+        <div><time>${escapeHTML(item.year)}</time><div><small>${escapeHTML(item.type)}</small><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.place)}</p>${actionsHtml}</div></div>`;
+    }).join('');
+
+    const memoriesSection = memories.length ? `
+      <section class="section timeline-memories-section">
+        <div class="heading-row">
+          <div>
+            <p class="overline">Visual Archive & Personal Logs</p>
+            <h2>Memories & Milestones</h2>
+          </div>
+          <a class="timeline-view-all-albums" href="album-viewer.html">Browse visual albums ${arrow}</a>
+        </div>
+        <p class="section-lead">Personal retrospectives, childhood voice advocacy, handwritten dormitory notes, and pivotal moments captured in archival albums.</p>
+        <div class="memories-grid timeline-memories-grid">
+          ${memories.map(mem => {
+            const tag = typeof mem.tag === 'object' ? (mem.tag.en || mem.tag.vi) : (mem.tag || 'Memory');
+            const title = typeof mem.title === 'object' ? (mem.title.en || mem.title.vi) : mem.title;
+            const narrative = typeof mem.narrative === 'object' ? (mem.narrative.en || mem.narrative.vi) : mem.narrative;
+            return `
+              <article class="memory-card">
+                <div class="memory-top-row">
+                  <span class="memory-tag-badge">${escapeHTML(tag)}</span>
+                </div>
+                <h3 class="memory-card-title">${escapeHTML(title)}</h3>
+                <p class="memory-narrative">${escapeHTML(narrative)}</p>
+                <div class="memory-actions">
+                  ${mem.href ? `<a class="memory-action-btn" href="${escapeHTML(safeHref(mem.href))}">Read story ${arrow}</a>` : ''}
+                  ${mem.albumId ? `<a class="memory-album-btn" href="album-viewer.html?id=${encodeURIComponent(mem.albumId)}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> View Memory Album</a>` : ''}
+                </div>
+              </article>
+            `;
+          }).join('')}
+        </div>
+      </section>
+    ` : '';
+
     return `${renderPageIntro(page)}
       <section class="section"><h2>${escapeHTML(page.listTitle)}</h2><div class="timeline-list">${timeline}</div></section>
+      ${memoriesSection}
       <section class="section"><h2>${escapeHTML(page.communityTitle)}</h2>${renderYearList(page.community)}</section>
       ${renderReach(page)}<div data-site-footer></div>`;
   }
 
   function renderLibrary(page) {
-    const shelf = (page.shelf || []).map(item => `
-      <article class="library-card">
-        <div class="library-cover-wrap">
-          <img class="library-cover" src="${escapeHTML(safeHref(item.cover || 'assets/books/covers/ai-assisted-programming.jpg'))}" alt="${escapeHTML(item.title)}" loading="lazy">
-          ${item.status ? `<span class="library-status-pill">${escapeHTML(item.status)}</span>` : ''}
-        </div>
-        <div class="library-content">
-          <div class="library-card-eyebrow">
-            <span>${escapeHTML(item.category || 'Reading')}</span>
-            <span>${escapeHTML(item.year || '')}</span>
-          </div>
-          <h3 class="library-title">${escapeHTML(item.title)}</h3>
-          <p class="library-author">${escapeHTML(item.author || '')}</p>
-          ${item.quote ? `<blockquote class="library-quote">${escapeHTML(item.quote)}</blockquote>` : ''}
-          ${item.thoughts ? `
-            <div class="library-thoughts">
-              <span class="thoughts-label">💭 Góc đúc kết & chia sẻ:</span>
-              <p>${richText(item.thoughts)}</p>
-            </div>
-          ` : ''}
-          ${item.link ? `<div class="library-link-wrap"><a href="${escapeHTML(safeHref(item.link))}" target="_blank" rel="noreferrer">Tìm hiểu thêm ${arrow}</a></div>` : ''}
-        </div>
-      </article>
-    `).join('');
-
     const items = (page.items || []).map((item, index) => `
       <div><span>${String(index + 1).padStart(2, '0')}</span><div><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.detail)}</p></div></div>`).join('');
 
     return `${renderPageIntro(page)}
-      ${shelf ? `
-        <section class="section">
-          <div class="heading-row">
-            <h2>${escapeHTML(page.shelfTitle || 'Tủ sách & Tài liệu đúc kết')}</h2>
-            <span>${(page.shelf || []).length} Tác phẩm</span>
-          </div>
-          <p class="section-lead">${escapeHTML(page.shelfSubtitle || 'Những cuốn sách, tài liệu và công trình đã định hình tư duy của tôi, kèm theo đúc kết cá nhân.')}</p>
-          <div class="library-shelf-grid">${shelf}</div>
-        </section>
-      ` : ''}
       <section class="section"><h2>${escapeHTML(page.listTitle || 'Reading map')}</h2><div class="library-list">${items}</div></section>
       <section class="section reach"><h2>${escapeHTML(page.noteTitle || 'Notes')}</h2><p class="prose">${richText(page.note)}</p>${renderLinks(page.noteLinks)}</section>
       <div data-site-footer></div>`;
   }
 
   function renderWriting(page) {
-    return `${renderPageIntro(page)}
-      <section class="section writing-index-section"><div class="heading-row"><h2>${escapeHTML(page.listTitle)}</h2><span data-writing-count>${escapeHTML(ui.loadingNotes || 'Loading notes')}</span></div><div class="writing-index" data-writing-list><p class="writing-notice">${escapeHTML(ui.loadingArchive || 'Loading the writing archive…')}</p></div></section>
-      ${renderReach(page)}<div data-site-footer></div>`;
+    return `
+      ${renderPageIntro(page)}
+      <section class="section writing-interests-section" data-writing-interests style="display:none;"></section>
+      <section class="section writing-explorations-section" data-writing-explorations style="display:none;"></section>
+      <section class="section writing-memories-section" data-writing-memories style="display:none;"></section>
+      <section class="section writings-archive-section" data-writings-archive>
+        <div class="writings-archive-header">
+          <div class="heading-row">
+            <div>
+              <p class="overline" data-writings-overline>Archive</p>
+              <h2 data-writings-heading>${escapeHTML(page.listTitle || 'Shared Field Notes & Logbooks')}</h2>
+            </div>
+            <div class="writing-header-controls">
+              <span class="writing-count-badge" data-writing-count>${escapeHTML(ui.loadingNotes || 'Loading notes')}</span>
+              <div class="writing-language-control" data-writing-language-control></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="writing-filter-toolbar" data-writing-filter-bar></div>
+
+        <div class="writing-index" data-writing-list>
+          <p class="writing-notice">${escapeHTML(ui.loadingArchive || 'Loading the writing archive…')}</p>
+        </div>
+      </section>
+      ${renderReach(page)}
+      <div data-site-footer></div>
+    `;
   }
 
   function renderWritingDetail() {
     return `<article class="writing-article" data-writing-detail aria-live="polite"><p class="writing-notice">${escapeHTML(ui.loadingArticle || 'Loading field note…')}</p></article><div data-site-footer></div>`;
+  }
+
+  function renderAlbumViewer() {
+    return `<div class="album-standalone-wrap" data-standalone-album-mount><div class="writing-notice">${escapeHTML(ui.loadingArchive || 'Loading notebook album…')}</div></div><div data-site-footer></div>`;
   }
 
   function pageKey() {
@@ -215,7 +396,7 @@
   }
 
   function setPageMetadata(key) {
-    const metadataKey = key === 'writing-detail' ? 'writing' : key;
+    const metadataKey = (key === 'writing-detail' || key === 'album-viewer') ? 'writing' : key === 'research-detail' ? 'research' : key;
     const page = config?.pages?.[metadataKey];
     if (!page) return;
     if (page.metaTitle) document.title = page.metaTitle;
@@ -245,29 +426,42 @@
     }
 
     const key = pageKey();
-    const page = config.pages[key === 'writing-detail' ? 'writing' : key];
+    const isResearchDetail = key === 'research-detail' || (key === 'research' && Boolean(new URLSearchParams(window.location.search).get('id')));
+    const isAlbumViewer = key === 'album-viewer';
+    const page = config.pages[key === 'writing-detail' || isAlbumViewer ? 'writing' : key === 'research-detail' ? 'research' : key];
     const renderers = {
       about: renderAbout,
       research: renderResearch,
+      'research-detail': renderResearchDetail,
       projects: renderProjects,
       books: renderBooks,
       activities: renderActivities,
       library: renderLibrary,
-      writing: renderWriting
+      writing: renderWriting,
+      'album-viewer': renderAlbumViewer
     };
-    mount.classList.toggle('article-container', key === 'writing-detail');
+    mount.classList.toggle('article-container', key === 'writing-detail' || isResearchDetail);
     mount.innerHTML = key === 'writing-detail'
       ? renderWritingDetail()
-      : renderers[key] && page
-        ? renderers[key](page)
-        : `<section class="page-intro"><p class="overline">${escapeHTML(ui.notFoundOverline || 'Portfolio')}</p><h1>${escapeHTML(ui.notFoundTitle || 'Page not found.')}</h1><p>${escapeHTML(ui.notFoundText || 'This page is not configured yet.')}</p></section><div data-site-footer></div>`;
+      : isResearchDetail
+        ? renderResearchDetail()
+        : isAlbumViewer
+          ? renderAlbumViewer()
+          : renderers[key] && page
+            ? renderers[key](page)
+            : `<section class="page-intro"><p class="overline">${escapeHTML(ui.notFoundOverline || 'Portfolio')}</p><h1>${escapeHTML(ui.notFoundTitle || 'Page not found.')}</h1><p>${escapeHTML(ui.notFoundText || 'This page is not configured yet.')}</p></section><div data-site-footer></div>`;
     setPageMetadata(key);
   }
 
   function renderHeader() {
     const mount = document.querySelector('[data-site-header]');
     if (!mount || !config?.site) return;
-    const current = pageKey() === 'writing-detail' ? 'writing' : pageKey();
+    const currentKey = pageKey();
+    const current = (currentKey === 'writing-detail' || currentKey === 'writing' || currentKey === 'album-viewer')
+      ? 'writing'
+      : (currentKey === 'research-detail' || currentKey === 'research')
+        ? 'research'
+        : currentKey;
     const links = (config.navigation || []).map(link =>
       `<a href="${escapeHTML(safeHref(link.href))}"${current === link.key ? ' aria-current="page"' : ''}>${escapeHTML(link.label)}</a>`
     ).join('');
