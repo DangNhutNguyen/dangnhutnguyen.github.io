@@ -687,15 +687,15 @@
     interestsMount.style.display = 'block';
     interestsMount.replaceChildren();
 
-    const card = element('div', 'writing-interests-card');
-    const header = element('div', 'writing-interests-header');
+    const headingRow = element('div', 'heading-row');
+    const headingWrap = element('div');
     const overline = element('p', 'overline', language === 'vi' ? 'Chủ đề quan tâm & Định hướng' : 'Research Interests & Open Questions');
-    const title = element('h2', 'writing-interests-title', localized.title || (language === 'vi' ? 'Chủ đề & câu hỏi đang tìm hiểu' : 'Research interests & open questions'));
-    header.append(overline, title);
+    const title = element('h2', '', localized.title || (language === 'vi' ? 'Chủ đề & câu hỏi đang tìm hiểu' : 'Research interests & open questions'));
+    headingWrap.append(overline, title);
+    headingRow.append(headingWrap);
 
-    const body = element('p', 'writing-interests-body', localized.lead);
-    card.append(header, body);
-    interestsMount.append(card);
+    const body = element('p', 'prose', localized.lead);
+    interestsMount.append(headingRow, body);
   }
 
   function renderExplorations(language) {
@@ -711,48 +711,60 @@
     explorationsMount.style.display = 'block';
     explorationsMount.replaceChildren();
 
-    const header = element('div', 'writing-explorations-header');
+    const headingRow = element('div', 'heading-row');
+    const headingWrap = element('div');
     const overline = element('p', 'overline', language === 'vi' ? 'Dự án & Thử nghiệm thực địa' : 'Projects & Explorations');
-    const title = element('h2', 'writing-explorations-title', labels.explorationsTitle || (language === 'vi' ? 'Dự án & Hướng tìm hiểu' : 'Projects & Explorations'));
-    const lead = element('p', 'writing-explorations-lead', labels.explorationsSubtitle || (language === 'vi' ? 'Các dự án thực tế, triển khai mã nguồn và hướng tìm hiểu đang phát triển.' : 'Active investigations, mathematical implementations, and ongoing exploration tracks.'));
-    header.append(overline, title, lead);
-    explorationsMount.append(header);
+    const title = element('h2', '', labels.explorationsTitle || (language === 'vi' ? 'Dự án & Hướng tìm hiểu' : 'Projects & Explorations'));
+    headingWrap.append(overline, title);
+    headingRow.append(headingWrap);
 
-    const grid = element('div', 'explorations-grid');
+    const leadText = labels.explorationsSubtitle || (language === 'vi' ? 'Các dự án thực tế, triển khai mã nguồn và hướng tìm hiểu đang phát triển.' : 'Active investigations, mathematical implementations, and ongoing exploration tracks.');
+    const lead = element('p', 'prose', leadText);
+    lead.style.marginBottom = '20px';
+
+    explorationsMount.append(headingRow, lead);
+
+    const list = element('div', 'work-list');
     items.forEach(exp => {
-      const card = element('article', 'exploration-card');
+      const article = element('article');
 
-      const topRow = element('div', 'exploration-top-row');
       const statusKey = exp.status || 'in-progress';
       const statusLabel = pickLang(exp.statusLabel, language) || (statusKey === 'completed' ? (language === 'vi' ? 'Đã hoàn thành' : 'Completed') : statusKey === 'paused' ? (language === 'vi' ? 'Tạm dừng' : 'Paused') : (language === 'vi' ? 'Đang thực hiện' : 'In progress'));
-      const statusBadge = element('span', `exploration-status-badge status-${statusKey}`, statusLabel);
-      topRow.append(statusBadge);
+      const timeEl = element('time', '', statusLabel);
 
-      const titleEl = element('h3', 'exploration-card-title', pickLang(exp.title, language) || '');
+      const content = element('div');
+      const titleEl = element('h3', '', pickLang(exp.title, language) || '');
       const problemText = pickLang(exp.problem, language) || '';
-      const problemEl = element('p', 'exploration-problem', problemText);
+      const problemEl = element('p', '', problemText);
 
-      const actionsRow = element('div', 'exploration-actions');
+      const linksWrap = element('div', 'inline-links');
+      linksWrap.style.marginTop = '10px';
+
       if (exp.href) {
-        const actionBtn = element('a', 'exploration-action-btn');
+        const actionBtn = element('a', '');
         actionBtn.href = exp.href;
         const actLabel = pickLang(exp.actionLabel, language) || (language === 'vi' ? 'Đọc ghi chép' : 'Read research notes');
-        actionBtn.innerHTML = `${escapeHTML(actLabel)} <span class="arrow" aria-hidden="true">&rarr;</span>`;
-        actionsRow.append(actionBtn);
+        actionBtn.innerHTML = `${escapeHTML(actLabel)} <span class="arrow" aria-hidden="true">&nearr;</span>`;
+        linksWrap.append(actionBtn);
       }
 
       if (exp.albumId) {
-        const albumLink = element('a', 'exploration-album-btn');
+        const albumLink = element('a', '');
         albumLink.href = `album-viewer.html?id=${encodeURIComponent(exp.albumId)}`;
-        albumLink.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> ${language === 'vi' ? 'Xem Album thật' : 'View Album'}`;
-        actionsRow.append(albumLink);
+        albumLink.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> ${language === 'vi' ? 'Xem Album thật' : 'View Album'} <span class="arrow" aria-hidden="true">&nearr;</span>`;
+        linksWrap.append(albumLink);
       }
 
-      card.append(topRow, titleEl, problemEl, actionsRow);
-      grid.append(card);
+      content.append(titleEl, problemEl);
+      if (linksWrap.children.length) {
+        content.append(linksWrap);
+      }
+
+      article.append(timeEl, content);
+      list.append(article);
     });
 
-    explorationsMount.append(grid);
+    explorationsMount.append(list);
   }
 
   function renderMemories(language) {
@@ -767,47 +779,59 @@
     memoriesMount.style.display = 'block';
     memoriesMount.replaceChildren();
 
-    const header = element('div', 'writing-memories-header');
+    const headingRow = element('div', 'heading-row');
+    const headingWrap = element('div');
     const overline = element('p', 'overline', language === 'vi' ? 'Kỷ niệm & Dấu mốc cuộc đời' : 'Memories & Milestones');
-    const title = element('h2', 'writing-memories-title', language === 'vi' ? 'Kỷ niệm & Dấu mốc' : 'Memories & Milestones');
-    const lead = element('p', 'writing-memories-lead', language === 'vi' ? 'Những khoảnh khắc, kỷ vật, năm tháng học trò và chặng đường trưởng thành gắn liền với các ghi chép.' : 'Key moments, personal archives, childhood journeys, and memories interwoven with the field notes.');
-    header.append(overline, title, lead);
-    memoriesMount.append(header);
+    const title = element('h2', '', language === 'vi' ? 'Kỷ niệm & Dấu mốc' : 'Memories & Milestones');
+    headingWrap.append(overline, title);
+    headingRow.append(headingWrap);
 
-    const grid = element('div', 'memories-grid');
+    const leadText = language === 'vi' ? 'Những khoảnh khắc, kỷ vật, năm tháng học trò và chặng đường trưởng thành gắn liền với các ghi chép.' : 'Key moments, personal archives, childhood journeys, and memories interwoven with the field notes.';
+    const lead = element('p', 'prose', leadText);
+    lead.style.marginBottom = '20px';
+
+    memoriesMount.append(headingRow, lead);
+
+    const list = element('div', 'work-list');
     items.forEach(mem => {
-      const card = element('article', 'memory-card');
+      const article = element('article');
 
-      const topRow = element('div', 'memory-top-row');
       const tagText = pickLang(mem.tag, language) || (language === 'vi' ? 'Kỷ niệm' : 'Memory');
-      const tagBadge = element('span', 'memory-tag-badge', tagText);
-      topRow.append(tagBadge);
+      const timeEl = element('time', '', tagText);
 
-      const titleEl = element('h3', 'memory-card-title', pickLang(mem.title, language) || '');
+      const content = element('div');
+      const titleEl = element('h3', '', pickLang(mem.title, language) || '');
       const narrativeText = pickLang(mem.narrative, language) || '';
-      const narrativeEl = element('p', 'memory-narrative', narrativeText);
+      const narrativeEl = element('p', '', narrativeText);
 
-      const actionsRow = element('div', 'memory-actions');
+      const linksWrap = element('div', 'inline-links');
+      linksWrap.style.marginTop = '10px';
+
       if (mem.href) {
-        const actionBtn = element('a', 'memory-action-btn');
+        const actionBtn = element('a', '');
         actionBtn.href = mem.href;
         const actLabel = pickLang(mem.actionLabel, language) || (language === 'vi' ? 'Đọc câu chuyện' : 'Read personal story');
-        actionBtn.innerHTML = `${escapeHTML(actLabel)} <span class="arrow" aria-hidden="true">&rarr;</span>`;
-        actionsRow.append(actionBtn);
+        actionBtn.innerHTML = `${escapeHTML(actLabel)} <span class="arrow" aria-hidden="true">&nearr;</span>`;
+        linksWrap.append(actionBtn);
       }
 
       if (mem.albumId) {
-        const albumLink = element('a', 'memory-album-btn');
+        const albumLink = element('a', '');
         albumLink.href = `album-viewer.html?id=${encodeURIComponent(mem.albumId)}`;
-        albumLink.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> ${language === 'vi' ? 'Xem Memory Album' : 'View Memory Album'}`;
-        actionsRow.append(albumLink);
+        albumLink.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> ${language === 'vi' ? 'Xem Memory Album' : 'View Memory Album'} <span class="arrow" aria-hidden="true">&nearr;</span>`;
+        linksWrap.append(albumLink);
       }
 
-      card.append(topRow, titleEl, narrativeEl, actionsRow);
-      grid.append(card);
+      content.append(titleEl, narrativeEl);
+      if (linksWrap.children.length) {
+        content.append(linksWrap);
+      }
+
+      article.append(timeEl, content);
+      list.append(article);
     });
 
-    memoriesMount.append(grid);
+    memoriesMount.append(list);
   }
 
   function renderWritingAlbum(language, customMount = null) {

@@ -328,74 +328,6 @@ img, svg { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line);
 }
 .timeline-list h3 { margin-top: 4px; font-size: 15px; }
-.timeline-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-.timeline-action-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 5px;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--line) 12%, var(--page));
-  color: var(--text);
-  text-decoration: none;
-  transition: all 150ms ease;
-}
-.timeline-action-link:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-.timeline-action-link.album {
-  font-family: var(--mono);
-  font-size: 7.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  border-color: color-mix(in srgb, #d97706 35%, var(--line));
-  background: color-mix(in srgb, #d97706 8%, var(--page));
-  color: #b45309;
-}
-:root[data-theme="dark"] .timeline-action-link.album {
-  color: #fde68a;
-  border-color: rgba(251, 191, 36, 0.35);
-  background: color-mix(in srgb, #fbbf24 8%, var(--page));
-}
-.timeline-action-link.album:hover {
-  background: #d97706;
-  border-color: #d97706;
-  color: #fff;
-}
-:root[data-theme="dark"] .timeline-action-link.album:hover {
-  background: #b45309;
-  border-color: #fbbf24;
-}
-
-.timeline-memories-section {
-  margin-top: 48px;
-  padding-top: 36px;
-  border-top: 1px solid var(--line);
-}
-.timeline-view-all-albums {
-  font-family: var(--mono);
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--accent);
-  text-decoration: none;
-}
-.timeline-view-all-albums:hover {
-  text-decoration: underline;
-}
 
 .library-list > div {
   display: grid;
@@ -897,21 +829,14 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
    ENHANCED RESEARCH WORKS (Studies, Papers, Code & Explanations)
    ========================================================================== */
 .research-works-list {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  margin-top: 24px;
+  border-top: 1px solid var(--line);
+  margin-top: 8px;
 }
 .research-work-card {
-  padding: 26px 28px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--line) 12%, var(--page));
-  transition: border-color 180ms ease, box-shadow 180ms ease;
-}
-.research-work-card:hover {
-  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  transition: border-color 180ms ease;
 }
 .research-work-header {
   display: flex;
@@ -1241,42 +1166,31 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   margin: 0 0 14px;
   color: var(--text);
 }
-.research-abstract-box,
-.research-theory-box,
-.research-results-box {
-  padding: 18px 22px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--line) 14%, var(--page));
-  border: 1px solid var(--line);
+.research-abstract-box {
   line-height: 1.7;
 }
-.research-theory-box {
-  border-left: 3px solid var(--accent);
-}
+.research-theory-box,
 .research-results-box {
-  background: color-mix(in srgb, var(--accent) 7%, var(--page));
-  border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+  padding-left: 18px;
+  border-left: 2px solid var(--accent);
+  line-height: 1.7;
 }
 .research-related-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr;
+  border-top: 1px solid var(--line);
   margin-top: 14px;
 }
 .research-related-card {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 14px 18px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--line) 8%, var(--page));
-  transition: border-color 150ms ease, transform 150ms ease;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  transition: color 150ms ease;
 }
 .research-related-card:hover {
   border-color: var(--accent);
-  transform: translateY(-2px);
 }
 .research-related-index {
   font-family: var(--mono);
@@ -1298,387 +1212,19 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 }
 
 /* ==========================================================================
-   RESEARCH INTERESTS & PROJECTS & EXPLORATIONS STYLES
+   RESEARCH INTERESTS, PROJECTS & EXPLORATIONS, MEMORIES & MILESTONES
+   Clean, unboxed typographic layout matching the site's editorial design
    ========================================================================== */
 
-/* 1. RESEARCH INTERESTS SECTION */
-.writing-interests-section {
-  margin: 16px 0 36px;
-  padding: 24px 28px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--line) 6%, var(--page));
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
-}
-.writing-interests-header {
-  margin-bottom: 12px;
-}
-.writing-interests-header .overline {
-  font-family: var(--mono);
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--accent);
-  margin-bottom: 4px;
-}
-.writing-interests-title {
-  margin: 0 0 8px;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -.02em;
-  color: var(--text);
-}
-.writing-interests-body {
-  font-size: 15px;
-  line-height: 1.7;
-  color: color-mix(in srgb, var(--text) 88%, var(--muted));
-  margin: 0;
-}
-
-/* 2. PROJECTS & EXPLORATIONS SECTION */
-.writing-explorations-section {
-  margin: 0 0 48px;
-}
-.writing-explorations-header {
-  margin-bottom: 18px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--line);
-}
-.writing-explorations-header .overline {
-  font-family: var(--mono);
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--accent);
-  margin-bottom: 4px;
-}
-.writing-explorations-title {
-  margin: 0 0 6px;
-  font-size: clamp(22px, 3vw, 28px);
-  font-weight: 700;
-  letter-spacing: -.025em;
-  color: var(--text);
-}
-.writing-explorations-lead {
-  margin: 0;
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 660px;
-}
-.explorations-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-top: 16px;
-}
-.exploration-card {
-  display: flex;
-  flex-direction: column;
-  padding: 20px 22px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--page);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
-}
-:root[data-theme="dark"] .exploration-card {
-  background: color-mix(in srgb, var(--line) 8%, var(--page));
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-.exploration-card:hover {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-}
-.exploration-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-.exploration-status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: 7.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  padding: 3px 8px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--line) 15%, var(--page));
-  color: var(--muted);
-}
-.exploration-status-badge.status-in-progress {
-  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
-  background: color-mix(in srgb, var(--accent) 10%, var(--page));
-  color: var(--accent);
-}
-.exploration-status-badge.status-completed {
-  border-color: color-mix(in srgb, #2e7d32 25%, transparent);
-  background: color-mix(in srgb, #2e7d32 8%, var(--page));
-  color: #2e7d32;
-}
-:root[data-theme="dark"] .exploration-status-badge.status-completed {
-  color: #81c784;
-  background: color-mix(in srgb, #81c784 12%, var(--page));
-}
-.exploration-status-badge.status-paused {
-  border-color: color-mix(in srgb, #d97706 25%, transparent);
-  background: color-mix(in srgb, #d97706 8%, var(--page));
-  color: #d97706;
-}
-.exploration-card-title {
-  margin: 0 0 8px;
-  font-size: 16.5px;
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -.015em;
-  color: var(--text);
-}
-.exploration-problem {
-  margin: 0 0 16px;
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: color-mix(in srgb, var(--text) 85%, var(--muted));
-  flex: 1;
-}
-.exploration-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px dashed var(--line);
-}
-.exploration-action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--sans);
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 5px 12px;
-  border-radius: 6px;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--line) 10%, var(--page));
-  color: var(--text);
-  text-decoration: none;
-  transition: all 150ms ease;
-}
-.exploration-action-btn:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-.exploration-album-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--mono);
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  padding: 5px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--line);
-  background: var(--page);
-  color: var(--muted);
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 150ms ease;
-}
-.exploration-album-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* 2b. MEMORIES & MILESTONES SECTION */
+.writing-interests-section,
+.writing-explorations-section,
 .writing-memories-section {
-  margin: 0 0 54px;
-}
-.writing-memories-header {
-  margin-bottom: 18px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--line);
-}
-.writing-memories-header .overline {
-  font-family: var(--mono);
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: #d97706;
-  margin-bottom: 4px;
-}
-:root[data-theme="dark"] .writing-memories-header .overline {
-  color: #fbbf24;
-}
-.writing-memories-title {
-  margin: 0 0 6px;
-  font-size: clamp(22px, 3vw, 28px);
-  font-weight: 700;
-  letter-spacing: -.025em;
-  color: var(--text);
-}
-.writing-memories-lead {
-  margin: 0;
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 660px;
-}
-.memories-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-top: 16px;
-}
-.memory-card {
-  display: flex;
-  flex-direction: column;
-  padding: 22px 24px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--page);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
-  position: relative;
-}
-:root[data-theme="dark"] .memory-card {
-  background: color-mix(in srgb, var(--line) 8%, var(--page));
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-.memory-card:hover {
-  border-color: color-mix(in srgb, #d97706 45%, var(--line));
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-}
-:root[data-theme="dark"] .memory-card:hover {
-  border-color: color-mix(in srgb, #fbbf24 45%, var(--line));
-}
-.memory-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.memory-tag-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: 7.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  padding: 3px 9px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, #d97706 25%, transparent);
-  background: color-mix(in srgb, #d97706 8%, var(--page));
-  color: #b45309;
-}
-:root[data-theme="dark"] .memory-tag-badge {
-  color: #fde68a;
-  border-color: rgba(251, 191, 36, 0.3);
-  background: color-mix(in srgb, #fbbf24 10%, var(--page));
-}
-.memory-card-title {
-  margin: 0 0 10px;
-  font-size: 16.5px;
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -.015em;
-  color: var(--text);
-}
-.memory-narrative {
-  margin: 0 0 18px;
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: color-mix(in srgb, var(--text) 85%, var(--muted));
-  flex: 1;
-}
-.memory-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: auto;
-  padding-top: 14px;
-  border-top: 1px dashed var(--line);
-}
-.memory-action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--sans);
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 5px 12px;
-  border-radius: 6px;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--line) 10%, var(--page));
-  color: var(--text);
-  text-decoration: none;
-  transition: all 150ms ease;
-}
-.memory-action-btn:hover {
-  background: #d97706;
-  border-color: #d97706;
-  color: #fff;
-}
-:root[data-theme="dark"] .memory-action-btn:hover {
-  background: #b45309;
-  border-color: #d97706;
-}
-.memory-album-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--mono);
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  padding: 5px 11px;
-  border-radius: 6px;
-  border: 1px solid color-mix(in srgb, #d97706 35%, var(--line));
-  background: color-mix(in srgb, #d97706 5%, var(--page));
-  color: #b45309;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 150ms ease;
-}
-:root[data-theme="dark"] .memory-album-btn {
-  color: #fde68a;
-  border-color: rgba(251, 191, 36, 0.35);
-  background: color-mix(in srgb, #fbbf24 6%, var(--page));
-}
-.memory-album-btn:hover {
-  border-color: #d97706;
-  background: #d97706;
-  color: #fff;
-}
-:root[data-theme="dark"] .memory-album-btn:hover {
-  border-color: #fbbf24;
-  background: #b45309;
-  color: #fff;
+  padding: 36px 0;
 }
 
-@media (max-width: 768px) {
-  .memories-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
+.writing-explorations-section .work-list,
+.writing-memories-section .work-list {
+  margin-top: 8px;
 }
 
 /* ==========================================================================

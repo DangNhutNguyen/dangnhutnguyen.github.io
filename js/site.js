@@ -284,60 +284,25 @@
   }
 
   function renderActivities(page) {
-    const memories = config.pages?.writing?.memories || [];
     const timeline = (page.items || []).map(item => {
       const actions = [];
       if (item.storySlug) {
-        actions.push(`<a class="timeline-action-link" href="writing.html?slug=${encodeURIComponent(item.storySlug)}">Story logbook ${arrow}</a>`);
+        actions.push(`<a href="writing.html?slug=${encodeURIComponent(item.storySlug)}">Story logbook ${arrow}</a>`);
       }
       if (item.albumId) {
-        actions.push(`<a class="timeline-action-link album" href="album-viewer.html?id=${encodeURIComponent(item.albumId)}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Memory Album ${arrow}</a>`);
+        actions.push(`<a href="album-viewer.html?id=${encodeURIComponent(item.albumId)}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Memory Album ${arrow}</a>`);
       }
       if (item.link) {
-        actions.push(`<a class="timeline-action-link" href="${escapeHTML(safeHref(item.link))}" target="_blank" rel="noreferrer">${escapeHTML(item.linkLabel || 'View details')} ${arrow}</a>`);
+        actions.push(`<a href="${escapeHTML(safeHref(item.link))}" target="_blank" rel="noreferrer">${escapeHTML(item.linkLabel || 'View details')} ${arrow}</a>`);
       }
-      const actionsHtml = actions.length ? `<div class="timeline-actions">${actions.join('')}</div>` : '';
+      const actionsHtml = actions.length ? `<div class="inline-links" style="margin-top:10px;">${actions.join('')}</div>` : '';
 
       return `
         <div><time>${escapeHTML(item.year)}</time><div><small>${escapeHTML(item.type)}</small><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.place)}</p>${actionsHtml}</div></div>`;
     }).join('');
 
-    const memoriesSection = memories.length ? `
-      <section class="section timeline-memories-section">
-        <div class="heading-row">
-          <div>
-            <p class="overline">Visual Archive & Personal Logs</p>
-            <h2>Memories & Milestones</h2>
-          </div>
-          <a class="timeline-view-all-albums" href="album-viewer.html">Browse visual albums ${arrow}</a>
-        </div>
-        <p class="section-lead">Personal retrospectives, childhood voice advocacy, handwritten dormitory notes, and pivotal moments captured in archival albums.</p>
-        <div class="memories-grid timeline-memories-grid">
-          ${memories.map(mem => {
-            const tag = typeof mem.tag === 'object' ? (mem.tag.en || mem.tag.vi) : (mem.tag || 'Memory');
-            const title = typeof mem.title === 'object' ? (mem.title.en || mem.title.vi) : mem.title;
-            const narrative = typeof mem.narrative === 'object' ? (mem.narrative.en || mem.narrative.vi) : mem.narrative;
-            return `
-              <article class="memory-card">
-                <div class="memory-top-row">
-                  <span class="memory-tag-badge">${escapeHTML(tag)}</span>
-                </div>
-                <h3 class="memory-card-title">${escapeHTML(title)}</h3>
-                <p class="memory-narrative">${escapeHTML(narrative)}</p>
-                <div class="memory-actions">
-                  ${mem.href ? `<a class="memory-action-btn" href="${escapeHTML(safeHref(mem.href))}">Read story ${arrow}</a>` : ''}
-                  ${mem.albumId ? `<a class="memory-album-btn" href="album-viewer.html?id=${encodeURIComponent(mem.albumId)}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> View Memory Album</a>` : ''}
-                </div>
-              </article>
-            `;
-          }).join('')}
-        </div>
-      </section>
-    ` : '';
-
     return `${renderPageIntro(page)}
       <section class="section"><h2>${escapeHTML(page.listTitle)}</h2><div class="timeline-list">${timeline}</div></section>
-      ${memoriesSection}
       <section class="section"><h2>${escapeHTML(page.communityTitle)}</h2>${renderYearList(page.community)}</section>
       ${renderReach(page)}<div data-site-footer></div>`;
   }
